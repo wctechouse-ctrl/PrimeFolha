@@ -1,14 +1,17 @@
 # PrimeFolha — SousaHub
 
-## Publicacao oficial verificada em 12/10/2026
+## Release atual — Production / Stable
 
-- **Versao publicada:** 0.14.1 **PILOTO** (Production / canal Beta).
-- **Instalador oficial:** [PrimeFolha_PILOTO_0.14.1_Setup.exe](https://github.com/wctechouse-ctrl/PrimeFolha/releases/download/v0.14.1-piloto/PrimeFolha_PILOTO_0.14.1_Setup.exe)
-- **Release:** [v0.14.1-piloto](https://github.com/wctechouse-ctrl/PrimeFolha/releases/tag/v0.14.1-piloto)
-- **SHA-256:** `a1ace7249aec2f1433b5c7c8ae212c6c2f94fec180b7163fe1f26e617c522fd0`
+- **Versão:** `0.14.2`
+- **Título no GitHub:** PrimeFolha Setup
+- **Tag:** [v0.14.2](https://github.com/wctechouse-ctrl/PrimeFolha/releases/tag/v0.14.2)
+- **Download:** [PrimeFolha_0.14.2_Production_Setup.exe](https://github.com/wctechouse-ctrl/PrimeFolha/releases/download/v0.14.2/PrimeFolha_0.14.2_Production_Setup.exe)
+- **SHA-256:** `538a8a718d36b39a7c04dfbeffd74a8f495d5872ca48cf713af323047c92feab`
+- **Publicação:** 12/10/2026
+- **Registro de atualização no SousaHub:** environment=`production`, channel=`stable`, active=`true`, mandatory=`false`
 
-A release erronea `v1.0-rc9-piloto`, que tinha o titulo de outro produto mas continha o mesmo instalador PrimeFolha, foi retirada e sua tag removida. A release correta foi preservada.
+## Histórico
+- [v0.14.1-piloto](https://github.com/wctechouse-ctrl/PrimeFolha/releases/tag/v0.14.1-piloto) — Production / Beta, inativo no catálogo de updates.
+- A release duplicada com tag de outro produto foi corrigida/removida.
 
-**Importante:** PILOTO nao equivale a STABLE. Os novos scripts de criacao de Production/Staging foram preparados a partir da fonte oficial, mas precisam ser compilados e homologados no Windows antes de publicar um novo instalador comercial ou ativar um release Stable.
-
-Apenas marcar uma release existente como stable nao comprova que ela corresponde ao codigo atualizado. O instalador novo precisa ser conferido por SHA-256 e testado em instalacao/atualizacao real.
+**Nota:** a publicação e o SHA-256 foram conferidos; homologação funcional em uma instalação real de Windows deve ser feita antes de distribuição comercial em escala. Builds Staging são separados e não devem ser distribuídos para clientes.
