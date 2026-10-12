@@ -1,0 +1,69 @@
+name: Corrigir release duplicada PrimeFolha
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/corrigir-release-duplicada.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  corrigir:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validar releases e retirar somente duplicata incorreta
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          if [ "$GH_REPO" != "wctechouse-ctrl/PrimeFolha" ]; then
+            echo "::error::Repositorio inesperado: $GH_REPO"
+            exit 1
+          fi
+
+          correct="$(gh api "repos/$GH_REPO/releases/tags/v0.14.1-piloto")"
+          if ! jq -e '
+            .name == "PrimeFolha 0.14.1 PILOTO" and
+            .prerelease == true and
+            (.assets | length) == 1 and
+            .assets[0].name == "PrimeFolha_PILOTO_0.14.1_Setup.exe"
+          ' <<<"$correct" >/dev/null; then
+            echo "::error::Release canonica foi alterada; nao executar correcao automatica."
+            exit 1
+          fi
+
+          if ! wrong="$(gh api "repos/$GH_REPO/releases/tags/v1.0-rc9-piloto" 2>/dev/null)"; then
+            echo "Duplicata inexistente. Nada a corrigir."
+            exit 0
+          fi
+
+          if ! jq -e '
+            .name == "Precificador Prime 1.0 RC9 PILOTO" and
+            .prerelease == true and
+            (.assets | length) == 1 and
+            .assets[0].name == "PrimeFolha_PILOTO_0.14.1_Setup.exe"
+          ' <<<"$wrong" >/dev/null; then
+            echo "::error::Tag errada nao corresponde a duplicata conhecida; alteracao abortada."
+            exit 1
+          fi
+
+          canonical_digest="$(jq -r '.assets[0].digest' <<<"$correct")"
+          duplicate_digest="$(jq -r '.assets[0].digest' <<<"$wrong")"
+          canonical_size="$(jq -r '.assets[0].size' <<<"$correct")"
+          duplicate_size="$(jq -r '.assets[0].size' <<<"$wrong")"
+          if [ -z "$canonical_digest" ] || [ "$canonical_digest" == "null" ] ||
+             [ "$canonical_digest" != "$duplicate_digest" ] ||
+             [ "$canonical_size" != "$duplicate_size" ]; then
+            echo "::error::Binarios nao sao comprovadamente identicos."
+            exit 1
+          fi
+
+          gh release delete "v1.0-rc9-piloto" --repo "$GH_REPO" --cleanup-tag --yes
+          gh api "repos/$GH_REPO/releases/tags/v0.14.1-piloto" --jq '.html_url'
+          echo "OK: duplicata incorreta retirada. PILOTO correto do PrimeFolha preservado."
